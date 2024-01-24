@@ -10,7 +10,6 @@ pipeline {
         }
        
            }		
-        }
         stage('unit-test') {
 	   steps {
                 echo 'unittest..'
@@ -22,13 +21,11 @@ pipeline {
                }
            }			
         }
-}
-}
        		
-        }
         stage('package') {
 	   steps {
                 echo 'package......'
 		sh script: '/opt/maven/bin/mvn package'	
            }		
         }
+}
