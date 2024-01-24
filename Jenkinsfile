@@ -4,13 +4,12 @@ pipeline {
         stage('compile') {
 	   steps {
                 echo 'compiling..'
-		git url: 'https://github.com/chukwudilouis/FinalProject.git'
+		git url: 'https://github.com/lerndevops/samplejavaapp'
 		sh script: '/opt/maven/bin/mvn compile'
-           }
-        }
-       
-           }		
-        stage('unit-test') {
+	   }
+	}
+    }
+	 stage('unit-test') {
 	   steps {
                 echo 'unittest..'
 	        sh script: '/opt/maven/bin/mvn test'
@@ -21,8 +20,7 @@ pipeline {
                }
            }			
         }
-       		
-        stage('package') {
+	 stage('package') {
 	   steps {
                 echo 'package......'
 		sh script: '/opt/maven/bin/mvn package'	
