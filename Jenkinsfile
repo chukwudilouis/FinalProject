@@ -22,8 +22,7 @@ pipeline {
                }
            }			
         }
-       
-           }			
+       		
         }
         stage('package') {
 	   steps {
