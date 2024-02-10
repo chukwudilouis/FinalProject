@@ -1,29 +1,44 @@
 pipeline {
-    agent any
+    agent { label 'slave' }
+
     stages {
-        stage('compile') {
+        stage('Checkout') {
             steps {
-                echo 'compiling..'
-                git url: 'https://github.com/chukwudilouis/FinalProject.git'
-                sh script: '/opt/maven/bin/mvn compile'
+                // Checkout the source code from the Git repository
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/chukwudilouis/FinalProject.git']]])
             }
         }
-        stage('unit-test') {
+
+        stage('Compile') {
             steps {
-                echo 'unittest..'
-                sh script: '/opt/maven/bin/mvn test'
-            }
-            post {
-                success {
-                    junit 'target/surefire-reports/*.xml'
-                }
+                // Compile the Java code using Maven
+                sh 'mvn compile'
             }
         }
-        stage('package') {
+
+        stage('Test') {
             steps {
-                echo 'package......'
-                sh script: '/opt/maven/bin/mvn package'
+                // Run tests using Maven
+                sh 'mvn test'
             }
+        }
+
+        stage('Package') {
+            steps {
+                // Package the application using Maven
+                sh 'mvn package'
+            }
+        }
+    }
+
+    post {
+        success {
+            // Additional actions to perform on success (e.g., deployment)
+            echo 'Build successful! Perform additional deployment steps here.'
+        }
+        failure {
+            // Actions to perform on failure
+            echo 'Build failed! Notify or take corrective actions here.'
         }
     }
 }
