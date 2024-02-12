@@ -1,18 +1,10 @@
-# Use the official Ubuntu 20.04 LTS image as a base
-FROM ubuntu:20.04
-
-# Update package lists and install basic utilities
-RUN apt-get update && \
-    apt-get install -y \
-    curl \
-    nano \
-    && rm -rf /var/lib/apt/lists/*
-
-# Set the working directory to /app (optional)
-WORKDIR /app
-
-# Define an environment variable (optional)
-ENV MY_VARIABLE my_value
-
-# Run a command (optional)
-CMD ["bash"]
+FROM docker.io/library/ubuntu:18.04
+RUN apt-get -y update && apt-get -y upgrade
+RUN apt-get -y install openjdk-8-jdk wget
+RUN mkdir /usr/local/tomcat
+ADD https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.85/bin/apache-tomcat-9.0.85.tar.gz /tmp/apache-tomcat-9.0.85.tar.gz
+RUN cd /tmp && tar xvfz apache-tomcat-9.0.85.tar.gz
+RUN cp -Rv /tmp/apache-tomcat-9.0.85/* /usr/local/tomcat/
+ADD */.war /usr/local/tomcat/webapps
+EXPOSE 8081
+CMD /usr/local/tomcat/bin/catalina.sh run
