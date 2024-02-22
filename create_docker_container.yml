@@ -1,0 +1,32 @@
+---
+- name: Build Docker Image, Run Container, and Deploy to Docker Hub
+  hosts: localhost
+  become: true
+  vars:
+    docker_image_name: "chukwudilouis/abctproject"
+    docker_container_name: "abc"
+    docker_hub_username: "chukwudilouis"
+    docker_hub_password: "Chukwudi@26"
+
+  tasks:
+    - name: Build Docker image
+      command: "docker build -t {{ docker_image_name }} ."
+      args:
+        chdir: "/home/edurekauser"
+
+    - name: Stop and remove existing Docker container
+      command: "docker container rm -f {{ docker_container_name }}"
+      ignore_errors: true
+
+    - name: Create and run Docker container
+      command: "docker container run -d --name {{ docker_container_name }} -p 8090:8080 {{ docker_image_name }}"
+
+    - name: Log in to Docker Hub
+      command: "docker login -u {{ docker_hub_username }} -p {{ docker_hub_password }}"
+
+    - name: Tag Docker image for Docker Hub
+      command: "docker tag {{ docker_image_name }} {{ docker_hub_username }}/abctproject:latest"
+
+    - name: Deploy Docker image to Docker Hub
+      command: "docker push {{ docker_hub_username }}/abctproject:latest"
+...
