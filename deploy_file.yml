@@ -1,0 +1,40 @@
+---
+- name: Build Docker Image, Run Container, and Deploy to Docker Hub and Kubernetes
+  hosts: localhost
+  become: true
+  vars:
+    # ... (other variables)
+
+  tasks:
+    - name: Ensure kubernetes library is installed
+      ansible.builtin.pip:
+        name: kubernetes
+        executable: /usr/bin/python3
+        state: present
+
+    - name: Deploy to Kubernetes
+      k8s:
+        state: "present"
+        definition:
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: "{{ k8s_deployment_name }}"
+            namespace: "{{ k8s_namespace }}"
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: abctproject
+            template:
+              metadata:
+                labels:
+                  app: abctproject
+              spec:
+                containers:
+                  - name: abctproject
+                    image: "{{ docker_hub_username }}/abctproject:latest"
+                    ports:
+                      - containerPort: 8080
+      delegate_to: localhost  # Ensure the task runs on localhost
+...
