@@ -39,5 +39,6 @@
                       - containerPort: 8080
       delegate_to: localhost  # Ensure the task runs on localhost
       vars:
-        ansible_python_interpreter: /usr/bin/python3  # Replace with the correct path
+        ansible_python_interpreter: /usr/bin/python3
+        ansible_python_interpreter_binary: /usr/bin/python3
 ...
