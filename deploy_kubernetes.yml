@@ -34,7 +34,7 @@
 
     - name: Deploy to Kubernetes
       k8s:
-        state: "latest"
+        state: "present"
         definition:
           apiVersion: apps/v1
           kind: Deployment
